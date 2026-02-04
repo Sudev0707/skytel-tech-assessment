@@ -51,6 +51,8 @@ const Home = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const filteredBlogs = activeCategory === "All" ? blogs : blogs.filter(blog => blog.category === activeCategory);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -67,8 +69,10 @@ const Home = () => {
           "https://sample-api-black.vercel.app/api/v1/blogs",
         );
         const res = await result.json();
-        setBlogs(res.blogs);
-        setCategories(res.blogs.map((blog: Blogs) => blog.category));
+        const blogsData = res.blogs as Blogs[];
+        setBlogs(blogsData);
+        const uniqueCategories = blogsData.map((blog) => blog.category)
+        setCategories(["All", ...uniqueCategories]);
 
         console.log("blogs", res);
       } catch (error) {
@@ -131,7 +135,7 @@ const Home = () => {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogs.map((post) => (
+              {filteredBlogs.map((post) => (
                 <article className="blog-card" key={post.id}>
                   <div className="blog-card-image">
                     <img src={post.photo_url} alt={post.title} />
