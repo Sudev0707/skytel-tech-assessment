@@ -95,7 +95,7 @@ const Home = () => {
               development.
             </p>
 
-            <div className="search-wrapper mx-auto bg-white rounded-lg max-w-[700px] w-full border">
+            <div className="search-wrapper mx-auto bg-white rounded-lg max-w-[90%]  sm:max-w-[500px] md:max-w-[600px] lg:max-w-[700px] w-full">
               <div className="search-container relative border border-gray-300 rounded-lg">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" />
                 <input
