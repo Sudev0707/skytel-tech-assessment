@@ -50,8 +50,13 @@ const Home = () => {
   const [blogs, setBlogs] = useState<Blogs[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const filteredBlogs = activeCategory === "All" ? blogs : blogs.filter(blog => blog.category === activeCategory);
+  const filteredBlogs =
+    activeCategory === "All"
+      ? blogs
+      : blogs.filter((blog) => blog.category === activeCategory);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -64,6 +69,8 @@ const Home = () => {
 
   useEffect(() => {
     const getBlogsData = async () => {
+      setLoading(true);
+
       try {
         const result = await fetch(
           "https://sample-api-black.vercel.app/api/v1/blogs",
@@ -71,12 +78,17 @@ const Home = () => {
         const res = await result.json();
         const blogsData = res.blogs as Blogs[];
         setBlogs(blogsData);
-        const uniqueCategories = blogsData.map((blog) => blog.category)
+        // const uniqueCategories = blogsData.map((blog) => blog.category);
+        const uniqueCategories  = Array.from(new Set(blogsData.map(blog => blog.category)))
+
         setCategories(["All", ...uniqueCategories]);
 
         console.log("blogs", res);
       } catch (error) {
         console.log("Fetch error:", error);
+        setErrorMsg("Something went wrong. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -112,9 +124,9 @@ const Home = () => {
         </section>
 
         {/* Article */}
-        <section className="py-16">
+        <section className="pb-16 pt-10">
           <div className="container mx-auto px-4">
-            <div className="flex gap-3">
+            <div className="flex gap-3 mb-9 justify-center">
               {categories.map((category) => (
                 <button
                   key={category}
@@ -133,33 +145,38 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-center mb-12">
               Latest Articles
             </h2>
+            {loading ? (
+              <div className="flex justify-center items-center h-32">
+                <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredBlogs.map((post) => (
+                  <article className="blog-card" key={post.id}>
+                    <div className="blog-card-image">
+                      <img src={post.photo_url} alt={post.title} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredBlogs.map((post) => (
-                <article className="blog-card" key={post.id}>
-                  <div className="blog-card-image">
-                    <img src={post.photo_url} alt={post.title} />
-
-                    <span className="category-badge">{post.category}</span>
-                  </div>
-
-                  <div className="blog-card-body">
-                    <h3 className="blog-card-title">{post.title}</h3>
-
-                    <p className="blog-card-excerpt">{post.description}</p>
-
-                    <div className="blog-card-footer">
-                      <span className="blog-date">
-                        {formatDate(post.created_at)}
-                      </span>
-                      <a href="#" className="read-more">
-                        Read more
-                      </a>
+                      <span className="category-badge">{post.category}</span>
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+
+                    <div className="blog-card-body">
+                      <h3 className="blog-card-title">{post.title}</h3>
+
+                      <p className="blog-card-excerpt">{post.description}</p>
+
+                      <div className="blog-card-footer">
+                        <span className="blog-date">
+                          {formatDate(post.created_at)}
+                        </span>
+                        <a href="#" className="read-more">
+                          Read more
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>
