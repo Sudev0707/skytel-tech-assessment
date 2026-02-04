@@ -48,12 +48,8 @@ interface Blogs {
 const Home = () => {
   const [searchPost, setSearchPost] = useState("");
   const [blogs, setBlogs] = useState<Blogs[]>([]);
-
-  const filteredBlogs = blogs.filter(
-    (blog) =>
-      blog.title.toLowerCase().includes(searchPost.toLowerCase()) ||
-      blog.description.toLowerCase().includes(searchPost.toLowerCase()),
-  );
+  const [categories, setCategories] = useState<string[]>([]);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -71,8 +67,9 @@ const Home = () => {
           "https://sample-api-black.vercel.app/api/v1/blogs",
         );
         const res = await result.json();
-
         setBlogs(res.blogs);
+        setCategories(res.blogs.map((blog: Blogs) => blog.category));
+
         console.log("blogs", res);
       } catch (error) {
         console.log("Fetch error:", error);
@@ -113,12 +110,28 @@ const Home = () => {
         {/* Article */}
         <section className="py-16">
           <div className="container mx-auto px-4">
+            <div className="flex gap-3">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-4 py-2 rounded-full border transition-colors duration-200
+                    ${
+                      activeCategory === category
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                    }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
             <h2 className="text-3xl font-bold text-center mb-12">
               Latest Articles
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredBlogs.map((post) => (
+              {blogs.map((post) => (
                 <article className="blog-card" key={post.id}>
                   <div className="blog-card-image">
                     <img src={post.photo_url} alt={post.title} />
