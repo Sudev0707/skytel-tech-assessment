@@ -123,7 +123,14 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Article */}
+        {/*  */}
+        {errorMsg && (
+          <div className="bg-red-500 text-white p-4 text-center">
+            {errorMsg}
+          </div>
+        )}
+
+        {/*  */}
         <section className="pb-16 pt-10">
           <div className="container mx-auto px-4">
             <div className="flex gap-3 mb-9 justify-center">
