@@ -12,38 +12,8 @@ interface Blogs {
   created_at: string;
   category: string;
   image: string;
+  content_text: string;
 }
-
-// category
-// :
-// "technology"
-// content_html
-// :
-// "<p>TypeScript has become the de facto standard for large-scale JavaScript applications. In this article, we explore the latest features and how to leverage them effectively in your projects. The language has evolved significantly since its inception, introducing powerful type inference, conditional types, and template literal types that enable developers to write safer and more maintainable code.</p><p>One of the most compelling reasons to adopt TypeScript is its ability to catch errors at compile time rather than runtime. This shift-left approach to error detection saves countless hours of debugging and reduces production issues. Modern TypeScript also offers excellent IDE support with intelligent autocomplete, refactoring tools, and inline documentation.</p><p>The community has grown exponentially, with major frameworks like Angular, Vue, and React offering first-class TypeScript support. Setting up a new TypeScript project has never been easier thanks to tools like Vite, which provides lightning-fast development experience with hot module replacement. As we move forward, TypeScript continues to innovate with features like satisfies operator, const type parameters, and improved type narrowing that make the developer experience even better.</p>"
-// content_text
-// :
-// "TypeScript has become the de facto standard for large-scale JavaScript applications. In this article, we explore the latest features and how to leverage them effectively in your projects. The language has evolved significantly since its inception, introducing powerful type inference, conditional types, and template literal types that enable developers to write safer and more maintainable code. One of the most compelling reasons to adopt TypeScript is its ability to catch errors at compile time rather than runtime. This shift-left approach to error detection saves countless hours of debugging and reduces production issues. Modern TypeScript also offers excellent IDE support with intelligent autocomplete, refactoring tools, and inline documentation. The community has grown exponentially, with major frameworks like Angular, Vue, and React offering first-class TypeScript support. Setting up a new TypeScript project has never been easier thanks to tools like Vite, which provides lightning-fast development experience with hot module replacement. As we move forward, TypeScript continues to innovate with features like satisfies operator, const type parameters, and improved type narrowing that make the developer experience even better."
-// created_at
-// :
-// "2025-01-15T10:30:00Z"
-// description
-// :
-// "A comprehensive guide to modern TypeScript development practices and best patterns"
-// id
-// :
-// 1
-// photo_url
-// :
-// "https://images.unsplash.com/photo-1516116216624-53e697fedbea"
-// title
-// :
-// "Getting Started with TypeScript in 2025"
-// updated_at
-// :
-// "2025-01-15T10:30:00Z"
-// user_id
-// :
-// 101
 
 const Home = () => {
   const [searchPost, setSearchPost] = useState("");
@@ -53,10 +23,17 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const filteredBlogs =
-    activeCategory === "All"
-      ? blogs
-      : blogs.filter((blog) => blog.category === activeCategory);
+  const categoryFiltered = activeCategory === "All" ? blogs : blogs.filter((blog) => blog.category === activeCategory);
+
+
+  const filteredBlogs = searchPost
+    ? categoryFiltered.filter(
+        (blog) =>
+          blog.title.toLowerCase().includes(searchPost.toLowerCase()) ||
+          blog.description.toLowerCase().includes(searchPost.toLowerCase()) ||
+          blog.content_text.toLowerCase().includes(searchPost.toLowerCase())
+      )
+    : categoryFiltered;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -78,8 +55,7 @@ const Home = () => {
         const res = await result.json();
         const blogsData = res.blogs as Blogs[];
         setBlogs(blogsData);
-        // const uniqueCategories = blogsData.map((blog) => blog.category);
-        const uniqueCategories  = Array.from(new Set(blogsData.map(blog => blog.category)))
+        const uniqueCategories = Array.from(new Set(blogsData.map(blog => blog.category)))
 
         setCategories(["All", ...uniqueCategories]);
 
@@ -113,7 +89,7 @@ const Home = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" />
                 <input
                   type="text"
-                  placeholder="Search articles by title, description"
+                  placeholder="Search articles by title, description, or content"
                   value={searchPost}
                   onChange={(e) => setSearchPost(e.target.value)}
                   className="search-input py-4 text-black w-full pl-12 pr-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500"
@@ -152,10 +128,15 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-center mb-12">
               Latest Articles
             </h2>
+            <p className="text-center mb-4">
+              {filteredBlogs.length} results found
+            </p>
             {loading ? (
               <div className="flex justify-center items-center h-32">
                 <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
               </div>
+            ) : filteredBlogs.length === 0 ? (
+              <p className="text-center">No results found</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredBlogs.map((post) => (
