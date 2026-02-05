@@ -94,16 +94,14 @@ const Home = () => {
         );
         const res = await result.json();
         const blogsData = res.blogs as Blogs[];
-        setBlogs(blogsData);
+        setBlogs(blogsData.slice(0, 10));
         const uniqueCategories = Array.from(
           new Set(blogsData.map((blog) => blog.category)),
         );
 
         setCategories(["All", ...uniqueCategories]);
 
-        console.log("blogs", res);
       } catch (error) {
-        console.log("Fetch error:", error);
         setErrorMsg("Something went wrong. Please try again.");
       } finally {
         setLoading(false);
@@ -157,6 +155,7 @@ const Home = () => {
       <meta name="description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
       <meta name="keywords" content="Tech Blog, Programming, Web Development, Technology News, Tutorials" />
       <meta name="author" content="Tech Blog" />
+      <link rel="canonical" href={window.location.origin} />
       <meta property="og:title" content="Tech Blog - Latest in Technology & Web Development" />
       <meta property="og:description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
       <meta property="og:type" content="website" />
@@ -292,6 +291,13 @@ const Home = () => {
             contentLabel="Blog Details"
             className="bg-white rounded-lg px-4 pb-6  max-w-3xl mx-auto mt-20 outline-none"
             overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
+            aria={{
+              labelledby: "modal-title",
+              describedby: "modal-description"
+            }}
+            shouldFocusAfterRender={true}
+            shouldCloseOnOverlayClick={true}
+            shouldCloseOnEsc={true}
           >
             {selectedPost && (
               <div className="">
@@ -309,14 +315,15 @@ const Home = () => {
                 </div>
                 <div className="overflow-auto  lg:max-h-[600px]">
                   <img
+                  loading="lazy"
                     src={selectedPost.photo_url}
                     alt={selectedPost.title}
                     className="mb-4 rounded w-full max-h-[400px]  object-cover"
                   />
-                  <h2 className="text-2xl font-bold mb-2">
+                  <h2 id="modal-title" className="text-2xl font-bold mb-2">
                     {selectedPost.title}
                   </h2>
-                  <p className="text-gray-700 mb-4">
+                  <p id="modal-description" className="text-gray-700 mb-4">
                     {selectedPost.description}
                   </p>
                   <div

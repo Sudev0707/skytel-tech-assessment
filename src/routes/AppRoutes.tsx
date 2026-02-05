@@ -1,11 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Home from "../pages/Home"
+import { Suspense, lazy } from "react"
+
+const Home = lazy(() => import("../pages/Home"))
+
 const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home/>} />
-      </Routes>
+      <Suspense fallback={<div className="flex justify-center items-center h-screen"><p>Loading...</p></div>}>
+        <Routes>
+          <Route path="/" element={<Home/>} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
