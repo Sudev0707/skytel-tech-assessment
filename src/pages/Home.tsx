@@ -256,7 +256,7 @@ const Home = () => {
                       }}
                     >
                       <div className="blog-card-image">
-                        <img src={post.photo_url} alt={post.title} />
+                        <img  src={post.photo_url} alt={post.title} className="rounded-lg" loading="lazy" />
 
                         <span className="category-badge">{post.category}</span>
                       </div>
