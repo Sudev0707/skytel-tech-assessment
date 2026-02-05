@@ -14,6 +14,7 @@
 Below are the Lighthouse audit results for Performance, Accessibility, Best Practices, and SEO:
 
 ![Lighthouse Audit](screenshots/Screenshot%202026-02-06%20020420.png)
+![Lighthouse Audit](screenshots/Screenshot%202026-02-06%20025611.png)
 
 ## SEO Strategy
 ### Meta Tags Implemented
@@ -53,5 +54,5 @@ The search and filter functionality is implemented using React state management:
 
 
 ## Accessibility Note
-- where to include Keyboard Navigation (Tab, Enter, ESC)
+- Keyboard Navigation (Tab, Enter, ESC)
 - WCAG AA Color Contrast
