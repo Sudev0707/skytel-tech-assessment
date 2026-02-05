@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Search } from "lucide-react";
 import Modal from "react-modal";
+import { Helmet } from "react-helmet";
 
 interface Blogs {
   id: string;
@@ -80,6 +81,20 @@ const Home = () => {
 
   return (
     <>
+    <Helmet>
+       <title>Tech Blog - Latest in Technology & Web Development</title>
+      <meta name="description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
+      <meta name="keywords" content="Tech Blog, Programming, Web Development, Technology News, Tutorials" />
+      <meta name="author" content="Tech Blog" />
+       <meta property="og:title" content="Tech Blog - Latest in Technology & Web Development" />
+      <meta property="og:description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
+      <meta property="og:type" content="website" />
+        <meta property="og:type" content="website" />
+      <meta property="og:url" content={window.location.href} />
+      <meta property="og:image" content="URL_TO_DEFAULT_IMAGE" />
+      
+    </Helmet>
+    {/*  */}
       <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1">
@@ -143,8 +158,9 @@ const Home = () => {
               </p>
               {loading ? (
                 <div className="flex justify-center items-center h-32">
-                  <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+                  <p className="font-bold text-2xl text-black " >Loading...</p>
                 </div>
+
               ) : filteredBlogs.length === 0 ? (
                 <p className="text-center">No results found</p>
               ) : (
