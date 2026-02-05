@@ -183,19 +183,20 @@ const Home = () => {
           />
         // <script type="application/ld+json">
         //   {JSON.stringify(articleSchema)}
-          
+
         // </script>
       )}
+    
     </Helmet>
     {/*  */}
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1">
+        <main id="main-content" className="flex-1">
           {/* Hero Section */}
           <section className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20">
             <div className="container mx-auto text-center">
               <h1 className="text-5xl font-bold mb-4">
-                Welcome to Tech Blog 🚀
+                Welcome to Tech Blog 
               </h1>
               <p className="text-xl mb-8">
                 Discover the latest in technology, programming, and web
@@ -268,8 +269,15 @@ const Home = () => {
                       }}
                     >
                       <div className="blog-card-image">
-                        <img  src={`${post.photo_url}?w=800&auto=format`} alt={post.title} className="rounded-lg" loading="lazy" decoding="async" />
-
+                        <img
+                          src={`${post.photo_url}?w=400&h=250&fit=crop&auto=format`}
+                          alt={post.title}
+                          className="rounded-lg w-full h-48 object-cover"
+                          loading="lazy"
+                          decoding="async"
+                          width="400"
+                          height="250"
+                        />
                         <span className="category-badge">{post.category}</span>
                       </div>
 
@@ -301,6 +309,7 @@ const Home = () => {
           <Modal
             isOpen={showModal}
             onRequestClose={() => setShowModal(false)}
+             shouldCloseOnEsc={true}
             contentLabel="Blog Details"
             className="bg-white rounded-lg px-4 pb-6  max-w-3xl mx-auto mt-20 outline-none"
             overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
@@ -310,7 +319,6 @@ const Home = () => {
             }}
             shouldFocusAfterRender={true}
             shouldCloseOnOverlayClick={true}
-            shouldCloseOnEsc={true}
           >
             {selectedPost && (
               <div className="">
@@ -329,10 +337,12 @@ const Home = () => {
                 <div className="overflow-auto  lg:max-h-[600px]">
                   <img
                   loading="lazy"
-                  decoding="async" 
+                  decoding="async"
                     src={`${selectedPost.photo_url}?w=800&auto=format`}
                     alt={selectedPost.title}
                     className="mb-4 rounded w-full max-h-[400px]  object-cover"
+                    width="900"
+                    height="400"
                   />
                   <h2 id="modal-title" className="text-2xl font-bold mb-2">
                     {selectedPost.title}

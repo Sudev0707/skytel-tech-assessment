@@ -6,4 +6,13 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <!-- Dynamic blog URLs would be added here -->
+  <!-- Example:
+  <url>
+    <loc>https://tech-blog-sepia-tau.vercel.app/blog/1</loc>
+    <lastmod>2024-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
 </urlset>
