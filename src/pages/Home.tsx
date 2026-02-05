@@ -155,7 +155,7 @@ const Home = () => {
       <meta name="description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
       <meta name="keywords" content="Tech Blog, Programming, Web Development, Technology News, Tutorials" />
       <meta name="author" content="Tech Blog" />
-      <link rel="canonical" href={window.location.origin} />
+      <link rel="canonical" href={window.location.href} />
       <meta property="og:title" content="Tech Blog - Latest in Technology & Web Development" />
       <meta property="og:description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
       <meta property="og:type" content="website" />
@@ -165,13 +165,26 @@ const Home = () => {
        <meta name="twitter:title" content="Tech Blog – Latest in Technology & Web Development"/>
        <meta name="twitter:description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development."/>
        <meta name="twitter:image" content={blogs.length > 0 ? blogs[0].photo_url : 'https://images.unsplash.com/photo-1516116216624-53e697fedbea'} />
-      <script type="application/ld+json">
+      {/* <script type="application/ld+json">
         {JSON.stringify(websiteSchema)}
-      </script>
+        
+      </script> */}
+       <script type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
       {articleSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(articleSchema)}
-        </script>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(articleSchema),
+            }}
+          />
+        // <script type="application/ld+json">
+        //   {JSON.stringify(articleSchema)}
+          
+        // </script>
       )}
     </Helmet>
     {/*  */}
@@ -255,7 +268,7 @@ const Home = () => {
                       }}
                     >
                       <div className="blog-card-image">
-                        <img  src={post.photo_url} alt={post.title} className="rounded-lg" loading="lazy" />
+                        <img  src={`${post.photo_url}?w=800&auto=format`} alt={post.title} className="rounded-lg" loading="lazy" decoding="async" />
 
                         <span className="category-badge">{post.category}</span>
                       </div>
@@ -316,7 +329,8 @@ const Home = () => {
                 <div className="overflow-auto  lg:max-h-[600px]">
                   <img
                   loading="lazy"
-                    src={selectedPost.photo_url}
+                  decoding="async" 
+                    src={`${selectedPost.photo_url}?w=800&auto=format`}
                     alt={selectedPost.title}
                     className="mb-4 rounded w-full max-h-[400px]  object-cover"
                   />
