@@ -12,10 +12,44 @@ interface Blogs {
   description: string;
   excerpt: string;
   created_at: string;
+  updated_at: string;
   category: string;
   image: string;
   content_text: string;
 }
+
+// 0
+// : 
+// category
+// : 
+// "technology"
+// content_html
+// : 
+// "<p>TypeScript has become the de facto standard for large-scale JavaScript applications. In this article, we explore the latest features and how to leverage them effectively in your projects. The language has evolved significantly since its inception, introducing powerful type inference, conditional types, and template literal types that enable developers to write safer and more maintainable code.</p><p>One of the most compelling reasons to adopt TypeScript is its ability to catch errors at compile time rather than runtime. This shift-left approach to error detection saves countless hours of debugging and reduces production issues. Modern TypeScript also offers excellent IDE support with intelligent autocomplete, refactoring tools, and inline documentation.</p><p>The community has grown exponentially, with major frameworks like Angular, Vue, and React offering first-class TypeScript support. Setting up a new TypeScript project has never been easier thanks to tools like Vite, which provides lightning-fast development experience with hot module replacement. As we move forward, TypeScript continues to innovate with features like satisfies operator, const type parameters, and improved type narrowing that make the developer experience even better.</p>"
+// content_text
+// : 
+// "TypeScript has become the de facto standard for large-scale JavaScript applications. In this article, we explore the latest features and how to leverage them effectively in your projects. The language has evolved significantly since its inception, introducing powerful type inference, conditional types, and template literal types that enable developers to write safer and more maintainable code. One of the most compelling reasons to adopt TypeScript is its ability to catch errors at compile time rather than runtime. This shift-left approach to error detection saves countless hours of debugging and reduces production issues. Modern TypeScript also offers excellent IDE support with intelligent autocomplete, refactoring tools, and inline documentation. The community has grown exponentially, with major frameworks like Angular, Vue, and React offering first-class TypeScript support. Setting up a new TypeScript project has never been easier thanks to tools like Vite, which provides lightning-fast development experience with hot module replacement. As we move forward, TypeScript continues to innovate with features like satisfies operator, const type parameters, and improved type narrowing that make the developer experience even better."
+// created_at
+// : 
+// "2025-01-15T10:30:00Z"
+// description
+// : 
+// "A comprehensive guide to modern TypeScript development practices and best patterns"
+// id
+// : 
+// 1
+// photo_url
+// : 
+// "https://images.unsplash.com/photo-1516116216624-53e697fedbea"
+// title
+// : 
+// "Getting Started with TypeScript in 2025"
+// updated_at
+// : 
+// "2025-01-15T10:30:00Z"
+// user_id
+// : 
+// 101
 
 const Home = () => {
   const [searchPost, setSearchPost] = useState("");
@@ -79,6 +113,43 @@ const Home = () => {
     getBlogsData();
   }, []);
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Tech Blog",
+    "url": window.location.origin,
+    "description": "Discover the latest articles, tutorials, and news in technology, programming, and web development.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${window.location.origin}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const articleSchema = selectedPost ? {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": selectedPost.title,
+    "image": [selectedPost.photo_url],
+    "datePublished": selectedPost.created_at,
+    "dateModified": selectedPost.updated_at || selectedPost.created_at,
+    "author": {
+      "@type": "Person",
+      "name": "Tech Blog"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Tech Blog",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${window.location.origin}/logo.png`
+      }
+    },
+    "description": selectedPost.description,
+    "articleSection": selectedPost.category,
+    "url": window.location.href
+  } : null;
+
   return (
     <>
     <Helmet>
@@ -86,13 +157,23 @@ const Home = () => {
       <meta name="description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
       <meta name="keywords" content="Tech Blog, Programming, Web Development, Technology News, Tutorials" />
       <meta name="author" content="Tech Blog" />
-       <meta property="og:title" content="Tech Blog - Latest in Technology & Web Development" />
+      <meta property="og:title" content="Tech Blog - Latest in Technology & Web Development" />
       <meta property="og:description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development." />
       <meta property="og:type" content="website" />
-        <meta property="og:type" content="website" />
       <meta property="og:url" content={window.location.href} />
-      <meta property="og:image" content="URL_TO_DEFAULT_IMAGE" />
-      
+      <meta property="og:image" content={blogs.length > 0 ? blogs[0].photo_url : 'https://images.unsplash.com/photo-1516116216624-53e697fedbea'} />
+      <meta name="twitter:card" content="summary_large_image" />
+       <meta name="twitter:title" content="Tech Blog – Latest in Technology & Web Development"/>
+       <meta name="twitter:description" content="Discover the latest articles, tutorials, and news in technology, programming, and web development."/>
+       <meta name="twitter:image" content={blogs.length > 0 ? blogs[0].photo_url : 'https://images.unsplash.com/photo-1516116216624-53e697fedbea'} />
+      <script type="application/ld+json">
+        {JSON.stringify(websiteSchema)}
+      </script>
+      {articleSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(articleSchema)}
+        </script>
+      )}
     </Helmet>
     {/*  */}
       <div className="min-h-screen flex flex-col">
